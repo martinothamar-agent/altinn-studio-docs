@@ -1,0 +1,11 @@
+{{ partial "landing-pages/frontpage.html" . }}
+
+<span id="sidebar-toggle-span" class="adocs-sidebarToggle adocs-sidebarToggle-firstPage"> 
+	<a href="#" id="sidebar-toggle" data-sidebar-toggle=""><i class="fa fa-bars"></i> {{T "Navigation"}}</a>
+</span>
+
+{{if .Site.Home.Content }} 
+	{{ .Site.Home.Content | safeHTML }}
+{{end}}
+
+{{ partial "footer.html" . }}

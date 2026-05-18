@@ -1,0 +1,79 @@
+<div class="container">
+    <div class="row">
+         <!-- Search START -->
+        <div class="form-group a-form-group a-form-group-large col-sm-12">
+            <label class="a-h2" for="search-by">{{T "searching-for"}}</label>
+            <div id="search-by" style="margin: auto;" class=""></div>
+        </div>
+        <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+        <script src="/pagefind/pagefind-ui.js"></script>
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                new PagefindUI({
+                    element: "#search-by",
+                    pageSize: 10,
+                    excerptLength: 25,
+                    showSubResults: true,
+                    resetStyles: true,
+                    showImages: true,
+                    processResult: function (result) {
+                        if (result?.meta?.image) {
+                            let resultBase = new URL(result.url, window.location);
+                            let remappedImage = new URL(result.meta.image, resultBase);
+                            if (remappedImage.hostname !== window.location.hostname) {
+                                result.meta.image = remappedImage.toString();
+                            } else {
+                                result.meta.image = remappedImage.pathname;
+                            }
+                        }
+                    }
+                });
+                
+                var searchField = document.getElementsByClassName("pagefind-ui__search-input")[0];
+                if (searchField) {
+                    searchField.setAttribute('aria-label', '{{ T "search" }}');
+                }
+
+                var sKey = "as";
+                searchField.addEventListener("blur", () => {
+                    sessionStorage.setItem(sKey, searchField.value);
+                });
+
+                var searchButton = document.getElementById("search-button");
+                searchButton.addEventListener("click", () => {
+                    var scrollContainer = document.getElementsByClassName('adocs-scrollcontainer')[0];
+                    if (!searchField.checkVisibility()) {
+                        scrollContainer.setAttribute('style', 'visibility: hidden !important');
+                    } else {
+                        scrollContainer.removeAttribute('style');
+                    }
+                }); 
+                
+                if (sessionStorage.getItem(sKey)) {
+                    searchField.value = sessionStorage.getItem(sKey);
+                    searchField.dispatchEvent(new Event("input"));
+                }
+            });
+        </script>
+        <style>
+          :root {
+            --pagefind-ui-scale: 0.9;
+            --pagefind-ui-text: #000000;
+            --pagefind-ui-border: #1EAEF7;
+            --pagefind-ui-border-radius: 0;
+          }
+          .pagefind-ui__search-input::placeholder {
+            color: #757575 !important;
+            opacity: 1 !important;
+            font-weight: normal !important;
+          }
+          .pagefind-ui__result-link:hover, .pagefind-ui__result-link:hover {
+            text-decoration: none !important;
+          }
+          .pagefind-ui__form:before {
+            opacity: 1 !important;
+          }
+        </style>
+        <!-- Search END -->
+    </div>
+</div>

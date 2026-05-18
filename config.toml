@@ -1,0 +1,66 @@
+baseURL = "https://docs.altinn.studio/"
+languageCode = "nb"
+defaultContentLanguage = "nb"
+defaultContentLanguageInSubdir = true
+disableDefaultLanguageRedirect = false
+
+contentDir = "content"
+staticDir = "static"
+publishDir = "public"
+
+title = "Altinn Studio"
+theme = "hugo-theme-altinn"
+metadataFormat = "yaml"
+pluralizeListTitles = false
+preserveTaxonomyNames = true
+enableEmoji = true
+enableGitInfo = true
+disableKinds = ["RSS", "taxonomy", "term"] # page home section taxonomy term RSS sitemap robotsTXT 404
+
+[languages]
+  [languages.nb]
+    title = "Altinn docs"
+    languageName = "Bokmål"
+    weight = 1
+  [languages.en]
+    title = "Altinn docs"
+    languageName = "English"
+    weight = 2
+# [languages.nn]
+#   title = "Altinn"
+#   languageName = "Nynorsk"
+#   weight = 3
+
+[markup.goldmark]
+duplicateResourceFiles = true
+
+[markup.goldmark.parser]
+autoHeadingIDType = "github"
+
+[markup.goldmark.parser.attribute]
+block = true
+title = true
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[markup.highlight]
+style = "dracula"
+
+[markup.tableOfContents]
+startLevel = 2
+endLevel = 5
+ordered = false
+
+[blackfriday]
+fractions = false # disable automatic fraction rendering
+
+[params]
+editURL = "https://github.com/altinn/altinn-studio-docs/blob/master/content/"
+noHomeIcon = true # default is false
+noSearch = false # default is false
+showVisitedLinks = false # default is false
+enableMermaid = true # enable Mermaid diagrams
+
+[outputs]
+home = ["HTML", "JSON"] # JSON generates index.json file used by search

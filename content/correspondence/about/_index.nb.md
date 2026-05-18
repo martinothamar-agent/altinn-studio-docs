@@ -1,0 +1,57 @@
+---
+title: Om Altinn Melding
+linktitle: Om Altinn Melding
+description: Altinn Melding er en sikker og effektiv digital tjeneste som gjør det mulig for offentlige virksomheter å sende meldinger til innbyggere, næringsliv og andre offentlige virksomheter. Siden alle organisasjonsnummer og personnummer har en innboks i Altinn Arbeidsflate vil du alltid kunne nå riktig mottaker. En Altinn 3 Melding blir automatisk en dialog, og gjøres tilgjengelig gjennom Dialogporten i Altinn 3 Arbeidsflate.
+tags: []
+toc: false
+weight: 1
+cascade:
+  params:
+    diataxis: diataxis_explanation
+---
+
+### I tråd med Digitaliseringsrundskrivet
+Digitaliseringsrundskrivet legger føringer om å bruke digital post til virksomheter via Altinn. Når du velger Altinn Melding, innfrir du dette kravet og sikrer at meldinger sendes og mottas på en trygg måte.
+
+### Sikkerhet og tilgangsstyring
+Gjennom Altinn Autorisasjon blir kun de med tjenstlig behov gitt tilgang til å lese meldingen, noe som ivaretar konfidensialitet og personvern.
+
+### Varsling og revarsling
+Tjenesten tilbyr varsling og revarsling til mottaker på SMS og e‑post i samsvar med kravene i eForvaltningsforskriften. Det betyr at mottakere får beskjed når en ny melding venter.
+
+### Fleksibel mottaksløsning
+En Altinn 3 Melding blir automatisk en dialog og gjøres tilgjengelig gjennom Dialogporten i Altinn 3 Arbeidsflate. Mottakeren kan lese meldingen direkte i Arbeidsflate, eller integrere meldingen i sitt eget saks- og arkivsystem ved hjelp av Dialogportens API. Dette gir en smidig arbeidsflyt og full kontroll over informasjonsutvekslingen.
+
+### Integrasjon med Altinn Melding
+Man kan bruke Altinn som tjenesteeier for å sende meldinger eller integrere seg mot Altinn som sluttbrukersystem for å vise meldinger:
+
+{{% expandlarge id="om-altinn-melding-tjenesteeier" header="Tjenesteeier" %}}
+
+Er en offentlig virksomhet som har inngått en avtale for å konfigurere og forvalte tjenester i Altinn, for eksempel en meldingstjeneste.
+
+Tjenesteeieren registrerer meldingstjenesten i ressursregisteret. De bestemmer hvilke tilgangsregler som skal gjelde for aktuell tjeneste. Tilgangsreglene bestemmer hvem som kan lese meldingen: hvilket sikkerhetsnivå som kreves og hvilke tilgangspakker en leser må ha.
+
+Tjenesteeier kan da sende meldinger til virksomheter og privatpersoner.
+
+
+Eksempel på tjenesteeiere er: Skatteetaten, NAV og Brønnøysundregistrene (m.fl.).
+
+{{% /expandlarge %}}
+
+{{% expandlarge id="om-altinn-melding-systemleverandor" header="Systemleverandør" %}}
+
+Det er innbyggere og virksomheter som mottar meldinger i Altinn fra det offentlige. Det kan også være en representant eller fullmektig, som har fått delegert rettigheter i Altinn for et personnummer/organisasjonsnummer.
+
+Mottaker kan benytte seg av sluttbrukersystemer for å håndtere mottak og lagring av Altinn Melding. Sluttbrukersystemet må da ha fått delegert tilganger for dette i Altinn.
+
+Det er også mulig for et sluttbrukersystem å sende meldinger, eksempelvis: NAV (tjenesteeier) har en løsning for å sende ut vedtaksbrev. De kan enten sende meldingen direkte fra sine systemer, eller de kan bruke en tredjepart (systemleverandør) som håndterer distribusjonen teknisk.
+
+For at et sluttbrukersystem skal kunne brukes kreves det en maskin-til-maskin-integrasjon. 
+
+Typiske sluttbrukersystemer er de forskjellige regnskapssystemene og saks/arkivsystemer. 
+
+{{% /expandlarge %}}
+
+
+
+![altinn3-correspondence-logo](./altinn3-correspondence-logo.png "Altinn 3 Melding gir sikker og brukervennlig meldingsutveksling")

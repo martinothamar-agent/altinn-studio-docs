@@ -1,0 +1,19 @@
+{
+    "version": "1.0.0",
+    "configurations": [
+        {
+            "type": "pwa-msedge",
+            "request": "launch",
+            "name": "Launch in Edge",
+            "url": "http://docs.altinn.studio",
+            "preLaunchTask": "Hugo Server"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch in Chrome",
+            "url": "http://docs.altinn.studio",
+            "preLaunchTask": "Hugo Server"
+        }
+    ]
+}

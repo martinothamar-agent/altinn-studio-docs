@@ -1,0 +1,35 @@
+---
+title: 'What do you get?'
+description: 'An overview of the features provided by Dialogporten'
+weight: 20
+---
+
+## Common features
+* The "dialog" as a common meta-representation of interactive digital dialog services, regardless of platform
+* Integrated with Altinn Authorization, Maskinporten and ID-porten for trust and security
+* "Arbeidsflate" as a web-based GUI frontend, replacing "Altinn innboks"
+* Integrated with Altinn Events, paving the way to interconnected services
+ 
+## Features for service owners using Altinn Studio
+* Automatic integration - all app instances will be available in Dialogporten
+* Greater flexibility and richness in how your app instances can be presented for end users than Altinn 2
+* SDK for use in Altinn Apps utilizing a [Dialogporten API client](/en/dialogporten/what-do-you-get/../user-guides/service-owners/api-client/), allowing custom dialog updates to most accurately reflect the various states of your app
+
+## Features for service owners using other service platforms
+* Lets you make your digital services and messages available as first-class citizens alongside those realized in Altinn Studio
+* Greater flexibility in how your digital communication with end users can be presented
+* For platforms using .NET, an [API client](/en/dialogporten/what-do-you-get/../user-guides/service-owners/api-client/) to make it easier to administrate dialogs and verify dialog tokens
+
+## Features for end-user system (EUS) providers
+* Common format for digital service representations, making integrations easier regardless of platform
+* Integrated with Altinn Events for pub/sub-based consumption and monitoring, reducing the need for polling and paving the way to interconnected services
+
+## Features for end-users
+* Makes it easier to keep track of your communications with public actors, regardless of the technical platform the actor operates on
+* Avoid losing track of multiple copies of sensitive information - the data is kept where the data was born
+* Various end-user systems and portals operating on the same metadata state, e.g., the same activity and seen log
+
+## Next steps
+* {{<link "../getting-started">}}
+
+{{<children />}}

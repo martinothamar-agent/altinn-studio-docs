@@ -1,0 +1,23 @@
+<a class="nav-link dropdown-toggle a-languageSwitcher" aria-expanded="false" data-toggle="dropdown" aria-haspopup="true" href="#">
+  <img src="/images/{{ .Language }}.svg" class="" alt="Language" style="height: 1.2em; vertical-align: bottom;"/>
+</a>
+<div class="dropdown-menu a-dropdown-languages a-dropdownTriangle" style="z-index:100000;">
+  {{- $currentPage := . -}}
+  {{- if hugo.IsMultilingual -}}
+    {{- range .AllTranslations -}}
+    <a aria-hidden="true" class="dropdown-item" href="{{ .RelPermalink }}">
+      <img src="/images/{{ .Language }}.svg" class="a-iconLeft a-flag" alt="" />
+      <p>
+        <span class="a-h3">{{ .Language.LanguageName }}{{- if eq .Language.Lang $currentPage.Language.Lang }} ✓{{- end -}}</span><br>
+        {{- if eq .Language.Lang "en" -}}
+
+        {{- else if eq .Language.Lang "nb" -}}
+
+        {{- else if eq .Language.Lang "nn" -}}
+
+        {{- end -}}
+      </p>
+    </a>
+    {{- end -}}
+  {{- end -}}
+</div>

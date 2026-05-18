@@ -1,0 +1,28 @@
+<script>
+    (function() {
+        let swaggerCurrentEntity = '{{ .Get 0 }}';
+        if (typeof window.addSwaggerOnloadHandler !== "function") {
+            console.error("swaggerdisplayentity: you must call {"+"{<swaggerload \"uri to swagger\">}} first");
+        }
+        else {
+            addSwaggerOnloadHandler(function(spec) {
+                const $container = $(`#swagger-entity-display-container-${swaggerCurrentEntity}`);
+                if (typeof spec !== "object" || typeof spec.components !== "object" || typeof spec.components.schemas !== "object") {
+                    $container.html("<div class='notices warning'>swaggerdisplayentity: unable to parse spec</div>");
+                }
+                let entity = spec.components.schemas[swaggerCurrentEntity];
+                if (!entity) {
+                    $container.html(`<div class='notices warning'>swaggerdisplayentity: entity "${swaggerCurrentEntity}" not found in spec</div>`);
+                }
+                else {
+                    if (window.host == "localhost") {
+                        console.log(`swaggerdisplayentity: ${swaggerCurrentEntity}`, spec.components.schemas[swaggerCurrentEntity]);
+                    }
+                    $container.html(window.swaggerGenerateSchemaDefinitionList(spec, swaggerCurrentEntity, entity));
+                }
+            });
+        }
+    })();
+</script>
+
+<div class="swagger-entity-display-containe-outer" id="swagger-entity-display-container-{{ .Get 0 }}"></div>

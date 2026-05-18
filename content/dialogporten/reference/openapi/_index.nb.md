@@ -1,0 +1,20 @@
+---
+title: 'OpenAPI'
+description: 'Lenker til OpenAPI-spesifikasjoner for Dialogporten'
+weight: 10
+---
+
+API-spesifikasjonen for Dialogporten er tilgjengelig på følgende adresser:
+
+| Miljø      | URL                                                                   |
+| ---------- | --------------------------------------------------------------------- |
+| Test       | https://platform.at23.altinn.cloud/dialogporten/swagger/index.html    |
+| Staging    | https://platform.tt02.altinn.no/dialogporten/swagger/index.html       |
+| Production | https://platform.altinn.no/dialogporten/swagger/index.html            |
+
+
+**Les mer**
+* [Teknisk informasjon om Dialogporten V1-skjemaer](https://github.com/digdir/dialogporten/tree/main/docs/schema/V1)
+* {{<link "../../user-guides/authenticating">}}
+
+{{<children />}}

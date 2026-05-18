@@ -1,0 +1,21 @@
+---
+title: Altinn 3 Formidling
+linktitle: Formidling
+description: Altinn 3 Formidling ('Broker' på engelsk) tilbyr styrt filoverføring med støtte for store filer og avansert funksjonalitet for informasjonssikkerhet, statusmonitorering og tjenestekvalitet. Tjenesteeiere som har formidlingstjenester i Altinn II må reetablere disse i Altinn 3, i god tid før 19.juni 2026 når Altinn II slås av.  
+toc: false
+weight: 1
+aliases: 
+- /broker/
+cascade:
+  params:
+    product: product_broker
+---
+
+{{<children />}}
+
+Har du behov for effektiv og sikker overføring av store datamengder, samtidig som du kan garanterer for sikkerheten til sensitiv informasjon?
+
+Altinn Formidling er utviklet for å håndtere overføring av store datamengder raskt og effektivt. Løsningen garanterer sikkerheten til sensitiv informasjon gjennom beskyttelse mot uautorisert tilgang og datalekkasjer. Med full sporbarhet og garantert levering sikrer vi at alle dokumenter og data når frem trygt. I tillegg tilbyr vi enkel integrering med andre systemer via API'er, som muliggjør en sømløs digital opplevelse for dine kunder og partnere.
+
+Målgruppe:
+Alle offentlige og private virksomheter som har behov for rask og sikker overføring av store datamengder.

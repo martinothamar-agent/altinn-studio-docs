@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="{{ .Page.Language | default "en" }}" class="js csstransforms3d">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{ partial "meta.html" . }}
+
+    {{- if .IsHome -}}
+    <title>{{ .Title }}</title>
+    {{- else -}}
+    <title>{{ .Title }} – Altinn</title>
+    {{- end -}}
+
+    <link rel="shortcut icon" href="{{"images/favicon.png" | relURL}}" type="image/x-icon" />
+    <link href="{{"css/nucleus.css" | relURL}}" rel="stylesheet">
+    <link href="{{"css/font-awesome.min.css" | relURL}}" rel="stylesheet">
+    <link href="{{"css/hybrid.css" | relURL}}" rel="stylesheet">
+
+    <link href="{{"css/fortawesome.css" | relURL}}" rel="stylesheet">
+    <link href="{{"css/designsystem.css" | relURL}}" rel="stylesheet">
+    {{- with .Site.Params.themeStyle -}}
+    <link href="{{(printf "css/%s.css" .) | relURL}}" rel="stylesheet">
+    {{- else -}}
+    <link href="{{"css/theme.css" | relURL}}" rel="stylesheet">
+    {{- end -}}
+    {{- with .Site.Params.themeVariant -}}
+      <link href="{{(printf "css/theme-%s.css" .) | relURL}}" rel="stylesheet">
+    {{- end -}}
+
+    <script src="{{"js/jquery-2.x.min.js" | relURL}}"></script>
+
+    {{- partial "custom-head.html" . -}}
+
+    <style>
+      :root #header + #content > #left > #rlblock_left {
+        display:none !important;
+      }
+    </style>
+  </head>
+  <body class="a-page" data-url="{{ .RelPermalink }}">
+    {{- partial "topbar.html" . -}}
+
+    {{- if and (.IsHome) (.Params.jumbotron) -}}
+      {{- partial "jumbotron.html" . -}}
+    {{- end -}}
+
+    <div class="container pt-2 pt-md-3 pt-lg-5">      
+      <div class="adocs-scrollcontainer">
+        <div class="row">
+          <div class="col-sm-12 col-md-10 last-modified">{{T "Last-Modified"}}{{ .Page.Lastmod | time.Format ":date_medium" }}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-10">
+              {{- $productInfo := partial "get-current-product.html" . -}}              
+              {{- partialCached "sidebar-menu.html" . $productInfo.product $productInfo.version -}}
+        <script>
+          {{ template "activeMenus" dict "page" . "value" (printf "$(\"li.dd-item a[href='%s']\").parent().addClass(\"active\");" .RelPermalink) }}
+        </script>
+        <section id="body">
+          <div id="content" class="adocs-content js-moveChildrenTo">
+        <div id="overlay"></div>
+        <div class="a-text">
+        {{- if not .IsHome -}}
+          <div id="top-bar">            
+            <div id="breadcrumbs">
+                <span id="sidebar-toggle-span" class="adocs-sidebarToggle">
+                  <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                    <i class="fa fa-bars"></i>
+                    <span class="sr-only">Vis/skjul meny</span>
+                  </a>
+                </span>
+                <span class="links" data-pagefind-meta="🍞">
+                  {{- if eq .Kind "taxonomy" -}}
+                    <a href="/tags/">Tags</a> /
+                  {{- end -}}
+                  {{- $currentBreadcrumbText := .LinkTitle -}}
+                  {{- if .Params.breadcrumbText -}}
+                    {{- $currentBreadcrumbText = .Params.breadcrumbText -}}
+                  {{- end -}}
+                  {{- template "breadcrumb" dict "page" . "value" $currentBreadcrumbText -}}
+                </span>
+            </div>            
+          </div>
+        {{- end -}}
+        {{- if and false .Params.tags -}}
+          <div id="tags">
+            {{- range $index, $tag := .Params.tags -}}
+              <a class="label label-default" href="{{$.Site.BaseURL}}tags/{{ $tag | urlize }}">{{ $tag }}</a>
+            {{- end -}}
+          </div>
+        {{- end -}}
+        {{- if and true .Params.disablepagefind -}}
+          <div id="body-inner">
+        {{- else -}}
+          <div id="body-inner" data-pagefind-body>
+        {{- end -}}
+          {{- if not .IsHome -}}
+            {{- if eq .Kind "taxonomy" -}}
+              <h1 class="a-fontBold">Tag: {{- .Title -}}</h1>
+            {{- else -}}
+              <h1 class="a-fontBold">
+                {{- .Title -}}
+                {{- if .Params.titleSup -}}
+                  <sup>{{.Params.titleSup}}</sup>
+                {{- end -}}
+                {{- if .Params.SubTitle -}}
+                  <div class="subtitle" style="font-size: 75%; font-family: DIN-reg; margin-top: 0.25em;">{{.Params.SubTitle}}</div>
+                {{- end -}}
+              </h1>
+              <p class="a-leadText" id="leadText">{{.Description}}</p>
+            {{- end -}}
+          {{- end -}}
+
+{{- define "breadcrumb" -}}
+  {{- if .page.Parent.Parent -}}
+    {{- $breadcrumbText := .page.Parent.LinkTitle -}}
+    {{- if .page.Parent.Params.breadcrumbText -}}
+      {{- $breadcrumbText = .page.Parent.Params.breadcrumbText -}}
+    {{- end -}}
+    {{- $value := (printf "<a href='%s'>%s</a> <span class='adocs-breadcrumb-divider'> / </span> %s" .page.Parent.RelPermalink $breadcrumbText .value) -}}
+    {{- template "breadcrumb" dict "page" .page.Parent "value" $value -}}
+  {{- else -}}
+  {{- .value|safeHTML -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "activeMenus" -}}
+  {{- if and (.page.Parent) (not .page.Parent.IsHome) -}}
+    {{- $value := (printf "$(\"li.dd-item a[href='%s']\").parent().addClass(\"parent\");\n %s" .page.Parent.RelPermalink .value) -}}
+    {{ template "activeMenus" dict "page" .page.Parent "value" $value }}
+  {{- else -}}
+    {{.value|safeJS}}
+  {{- end -}}
+{{- end -}}

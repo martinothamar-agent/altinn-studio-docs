@@ -1,0 +1,273 @@
+{{ if not (.Page.Scratch.Get "swaggerdisplayoperation-marked-loaded") }}
+<script src="/revealjs/plugin/markdown/marked.js"></script>
+{{ .Page.Scratch.Set "swaggerdisplayoperation-marked-loaded" true }}
+{{ end }}
+
+<script>
+    (function() {
+        {{ $o := .Get 1 }}
+        let swaggerPath = '{{ $o }}';
+        let swaggerOperation = '{{ .Get 0 }}';
+        let swaggerOperationId = '{{ .Get 0}}{{ replace (replace (replace $o "/" "_") "{" "_") "}" "_" }}';
+
+        if (typeof window.addSwaggerOnloadHandler !== "function") {
+            console.error("swaggerdisplayoperation: you must call {"+"{<swaggerload \"uri to swagger\">}} first");
+        }
+        else {
+            addSwaggerOnloadHandler(function(spec) {
+                const $container = $(`#swagger-operation-display-container-${swaggerOperationId}`);
+                if (typeof spec !== "object" || typeof spec.paths !== "object") {
+                    $container.html("<div class='notices warning'>swaggerdisplayoperation: unable to parse spec</div>");
+                }
+                let path = spec.paths[swaggerPath];
+                
+                if (!path) {
+                    $container.html(`<div class='notices warning'>swaggerdisplayoperation: path "${swaggerPath}" not found in spec</div>`);
+                    return;
+                }
+
+                let operation = path[swaggerOperation];
+                if (!operation) {
+                    $container.html(`<div class='notices warning'>swaggerdisplayoperation: operation "${swaggerOperation}" not found for "${swaggerPath}" in spec</div>`);
+                    return;
+                }
+
+                if (window.host == "localhost") {
+                    console.log(`swaggerdisplayoperation: ${swaggerPath}`, operation);
+                }
+
+                let displayName = swaggerOperation.toUpperCase() + " " + swaggerPath;
+
+                $container.html(generateHtmlDefinitionList(spec, swaggerOperationId, displayName, operation));
+                
+            });
+        }
+
+        function getValidFormatExample(format) {
+            var ret = format;
+            switch (ret) {
+                case "date-time": ret = `Datetime in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8859-1</a> format, eg: <code class="sed-enum">${(new Date().toISOString())}</code>`; break;
+                case "int32": ret = `A positive integer, eg: <code class="sed-enum">123</code>`; break;
+            }
+            return ret;
+        } 
+
+        function renderSwaggerMarkdown(markdown) {
+            if (!markdown) {
+                return "";
+            }
+
+            if (typeof marked === "function") {
+                return marked(markdown, {
+                    gfm: true,
+                    breaks: true,
+                    headerPrefix: ""
+                });
+            }
+
+            return markdown.replaceAll("\n", "<br>");
+        }
+
+        function getRequestBodyHtml(spec, operationId, operation) {
+            const requestBody = window.swaggerResolveRef(spec, operation.requestBody);
+            if (!requestBody || !requestBody.content) {
+                return '';
+            }
+
+            const description = requestBody.description
+                ? `<div class="swagger-operation-request-body-description">${window.swaggerLinkifyDescription(requestBody.description)}</div>`
+                : '';
+
+            let contentHtml = '';
+            for (const [contentType, mediaType] of Object.entries(requestBody.content)) {
+                const schema = mediaType ? mediaType.schema : null;
+                if (!schema) {
+                    continue;
+                }
+
+                const schemaName = requestBody["x-name"]
+                    || window.swaggerGetRefName(schema)
+                    || `request_body_${contentType.replaceAll(/[^a-zA-Z0-9]+/g, "_")}`;
+
+                const definitionHtml = window.swaggerGenerateSchemaDefinitionList(
+                    spec,
+                    `${operationId}_${schemaName}`,
+                    schema,
+                    {
+                        showTitle: false,
+                        wrapperClass: 'swagger-operation-request-body-schema',
+                        columnHeader: 'Property'
+                    }
+                );
+
+                contentHtml += `
+                    <div class="swagger-operation-request-body-content">
+                        ${definitionHtml}
+                    </div>
+                `;
+            }
+
+            if (!contentHtml) {
+                return '';
+            }
+
+            return `
+                <div class="swagger-operation-request-body">
+                    <h4>Request body</h4>
+                    ${description}
+                    ${contentHtml}
+                </div>
+            `;
+        }
+
+        function generateHtmlDefinitionList(spec, operationId, displayName, operation, indentLevel = 0, parentName = '') {
+            let html = '';
+
+            let indentClass = '';
+            if (indentLevel > 0) {
+                indentClass = ` sed-indent sed-indent-${indentLevel}`;
+            }
+            
+            if (operation.parameters) {
+                html += `<dl class="swagger-entity-display${indentClass}">`;
+
+                for (let parameter of operation.parameters.filter((x) => x.in == "path")) {
+                    const parameterName = parameter.name;
+                    const description = parameter.description ? parameter.description.replaceAll(/\n\s*?\n/g, "<br><br>") : '(undescribed)';
+                    const type = parameter.schema.type || 'unknown';
+                    const statusLabels = [];
+                    if (parameter.required) {
+                        statusLabels.push('Required');
+                    }
+                    if (parameter.schema.nullable) {
+                        statusLabels.push('Nullable');
+                    }
+                    const statusBadge = statusLabels.length > 0
+                        ? `<span class="sed-status-badge">${statusLabels.join(', ')}</span>`
+                        : '';
+                    const example = parameter.schema.example ? `<span class="sed-ex-header">Example</span><code class="sed-ex">${parameter.schema.example}</code>` : '';
+                    const validFormat = parameter.schema.format ? `<span class="sed-enum-header">Accepted format:</span>${getValidFormatExample(parameter.schema.format)}` : '';
+
+                    const anchor = "" + operationId + (parentName ? "_" + parentName : "") + "_" + parameterName;
+                    html += `<dt>
+                                ${statusBadge}
+                                <span class="sed-prop"><a href="#${anchor}" id="${anchor}">${parameterName}</a></span>
+                            </dt>`;
+                    html += `<dd>
+                                <span class="sed-desc">${description}</span>
+                                ${validFormat}
+                                ${example}
+                            </dd>`;
+                }
+
+                for (let parameter of operation.parameters.filter((x) => x.in == "query")) {
+                    const parameterName = parameter.name;
+                    const description = parameter.description ? parameter.description.replaceAll(/\n\s*?\n/g, "<br><br>") : '(undescribed)';
+                    let parameterSchema = parameter.schema;
+                    if (parameterSchema.oneOf) {
+                        // Handling of oneOf. Assume just single type (ignore any type beyond the first).
+                        const nullable = parameterSchema.nullable; 
+                        parameterSchema = parameterSchema.oneOf[0];
+                        parameterSchema.nullable = nullable;
+
+                        // Hack to handle Dialogporten continuation tokens and orderBys
+                        if (parameterSchema["$$ref"] && parameterSchema["$$ref"].indexOf("ContinuationToken") > -1) 
+                        {
+                            parameterSchema.format = "See <a href='#pagination'>Pagination</a>"; 
+                        }
+                        if (parameterSchema["$$ref"] && parameterSchema["$$ref"].indexOf("OrderSetOfT") > -1) 
+                        {
+                            parameterSchema.format = "See <a href='#pagination'>Ordering</a>"; 
+                        }
+                    }
+                    
+                    const type = parameterSchema.type || 'unknown';
+                    const statusLabels = [];
+                    if (parameter.required) {
+                        statusLabels.push('Required');
+                    }
+                    if (parameterSchema.nullable) {
+                        statusLabels.push('Nullable');
+                    }
+                    const statusBadge = statusLabels.length > 0
+                        ? `<span class="sed-status-badge">${statusLabels.join(', ')}</span>`
+                        : '';
+                    const example = parameterSchema.example ? `<span class="sed-ex-header">Example</span><code class="sed-ex">${parameterSchema.example}</code>` : '';
+                    const enumNames = parameterSchema.items && parameterSchema.items.enum ? `<span class="sed-enum-header">Valid values</span><code class="sed-enum">${parameterSchema.items.enum.join(', ')}</code>` : '';
+                    const validFormat = parameterSchema.format ? `<span class="sed-enum-header">Accepted format:</span>${getValidFormatExample(parameterSchema.format)}` : '';
+
+                    let multipleDesc = '';
+                    if (parameter.style == "form") {
+                        multipleDesc = '<span class="sed-enum-header">Multiple values supported:</span><code class="class="sed-enum">';
+                        let possibleValues = parameterSchema.items && parameterSchema.items.enum ? parameterSchema.items.enum.slice(0, 2) : ["val1", "val2"];
+                        if (parameter.explode) {                           
+                            multipleDesc += `?${parameterName}=${possibleValues[0]}&${parameterName}=${possibleValues[1]}</code>`; 
+                        }
+                        else {
+                            multipleDesc += `?${parameterName}=${possibleValues.join(',')}</code>`;
+                        }
+                    }
+
+                    const anchor = "" + operationId + (parentName ? "_" + parentName : "") + "_" + parameterName;
+                    html += `<dt>
+                                ${statusBadge}
+                                <span class="sed-prop"><a href="#${anchor}" id="${anchor}">${parameterName}</a></span>
+                            </dt>`;
+                    html += `<dd>
+                                <span class="sed-desc">${description}</span>
+                                ${validFormat}
+                                ${example}
+                                ${enumNames}
+                                ${multipleDesc}
+                            </dd>`;
+
+                }
+                html += '</dl>';
+            } else if (operation.type === 'array' && operation.items) {
+                html += generateHtmlDefinitionList(spec, operationId, displayName, operation.items, indentLevel);
+            }
+
+            var parameterHtml = "";
+            if (html != "") {
+                parameterHtml = `                
+                <dl class="swagger-entity-display sed-head">
+                    <dt>Parameter</dt>
+                    <dd>Description</dd>
+                </dl>
+                ${html}
+                `;
+            }
+            else {
+                parameterHtml = "";
+            }
+
+            var descriptionHtml = "";
+            if (operation.description != "" && operation.description != operation.summary) {
+                descriptionHtml = `
+                <details>
+                    <summary>Show/hide description</summary>
+                    ${renderSwaggerMarkdown(operation.description)}
+                </details>
+                `;
+            }
+
+            const requestBodyHtml = getRequestBodyHtml(spec, operationId, operation);
+
+            if (indentLevel == 0) {
+                html = `
+                    <div class="swagger-operation-display-container">
+                        <h3>${displayName}</h3>
+                        <h4>${operation.summary}</h4>
+                        ${descriptionHtml}
+                        ${parameterHtml}
+                        ${requestBodyHtml}
+                    </div>
+                    `;
+            }
+
+            return html;
+        }
+    })();
+</script>
+
+<div class="swagger-operation-display-container-outer" id="swagger-operation-display-container-{{ .Get 0}}{{ replace (replace (replace $o "/" "_") "{" "_") "}" "_" }}"></div>
